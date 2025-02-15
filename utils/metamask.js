@@ -44,10 +44,10 @@ async function initMetamask(browser, privateKey) {
     await waitForAndClick(metamaskPage, 'button[data-testid="pin-extension-done"]', 'Pin Extension Done button');
 
     logger.debug(`[${pkShort}] Waiting after onboarding steps`);
-    await waitDelay(2);
+    await waitDelay(3);
 
     await waitForAndClick(metamaskPage, 'button[data-testid="account-menu-icon"]', 'Account Menu Icon');
-    await waitDelay(2);
+    await waitDelay(3);
     await waitForAndClick(metamaskPage, 'button[data-testid="multichain-account-menu-popover-action-button"]', 'Multichain Account Menu button');
 
     await waitDelay(1);

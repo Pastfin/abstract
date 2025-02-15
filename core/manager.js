@@ -60,6 +60,8 @@ async function manageBridge(worksheet, rowNumbers) {
         }
 
         const privateKey = String(row.getCell(1).value || '').trim();
+        const normalizedPrivateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
+
         const proxy = String(row.getCell(3).value || '').trim();
         const bridgeETHAmount = Number(row.getCell(6).value || 0);
         const chainFromRaw = String(row.getCell(7).value || '').toUpperCase();
@@ -73,18 +75,27 @@ async function manageBridge(worksheet, rowNumbers) {
         }
 
         const rpc = chainData.rpc;
+
         try {
+            logger.debug(`[${pkShort}] Starting bridge process with RPC: ${rpc}`);
+            
             const maxDecrease = configJson.bridge.maxRandomAmountDecreasingPercents / 100;
             const randomDecreaseFactor = Math.random() * maxDecrease;
-            let newBridgeAmount = bridgeETHAmount * (1 - randomDecreaseFactor);
+            logger.debug(`[${pkShort}] Random decrease factor: ${randomDecreaseFactor.toFixed(4)}`);
             
-            const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+            let newBridgeAmount = bridgeETHAmount * (1 - randomDecreaseFactor);
+            logger.debug(`[${pkShort}] Initial bridge amount: ${bridgeETHAmount}, new amount after decrease: ${newBridgeAmount}`);
+        
+            const account = web3.eth.accounts.privateKeyToAccount(normalizedPrivateKey);
+            logger.debug(`[${pkShort}] Account address: ${account.address}`);
+            
             const ethBalance = await getNativeBalance(account.address, proxy, rpc);
-
-            if (ethBalance < newBridgeAmount) {
+        
+            if (parseFloat(ethBalance) < newBridgeAmount) {
                 newBridgeAmount = parseFloat(ethBalance) - 1 / 2650; // ~1$ для резервных комиссий
                 newBridgeAmount *= (1 - randomDecreaseFactor);
-
+                logger.debug(`[${pkShort}] Adjusted bridge amount due to low balance: ${newBridgeAmount.toFixed(4)}`);
+        
                 if (newBridgeAmount < 0) {
                     logger.error(
                         `[${pkShort}] Not enough balance for bridge from chain ${chainFromRaw}, ` +
@@ -93,12 +104,14 @@ async function manageBridge(worksheet, rowNumbers) {
                     continue;
                 }
             }
+        
             await bridgeToAbstract(privateKey, newBridgeAmount, chainFromRaw, proxy);
-
+        
             const minDelaySec = configJson.bridge.minDelayBetweenWalletsMin * 60;
-            const maxDelaySec = configJson.bridge.minDelayBetweenWalletsMax * 60;
+            const maxDelaySec = configJson.bridge.maxDelayBetweenWalletsMin * 60;
+            logger.debug(`[${pkShort}] Min delay: ${minDelaySec}s, Max delay: ${maxDelaySec}s`);
             await randomDelay(minDelaySec, maxDelaySec);
-
+        
         } catch (err) {
             logger.error(`[${pkShort}] manageBridge error on row ${rowIndex}: ${err.message}`);
         }

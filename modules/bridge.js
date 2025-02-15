@@ -8,6 +8,7 @@ import { waitDelay } from '../utils/delay.js';
 
 async function bridgeToAbstract(privateKey, amount, chainFrom, proxyStr) {
     const pkShort = privateKey.slice(0, 15);
+    const normalizedPrivateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
 
     try {
         logger.info(`[${pkShort}] bridgeToAbstract started (amount: ${amount}, chainFrom: ${chainFrom})`);
@@ -19,7 +20,7 @@ async function bridgeToAbstract(privateKey, amount, chainFrom, proxyStr) {
         const proxyURL = prepareProxyURL(proxyStr);
 
         const web3 = createWeb3Instance(chainConfig.rpc, proxyURL);
-        const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+        const account = web3.eth.accounts.privateKeyToAccount(normalizedPrivateKey);
 
         const userState = stateJson[privateKey];
         if (!userState || !userState.absWalletAddress) {
