@@ -282,10 +282,6 @@ async function manageActivities(worksheet, rowNumbers) {
                 logger.success(`[${pkShort}] manageActivities finished row ${rowIndex}`);
                 await browser.close();
                 logger.debug(`[${pkShort}] Browser closed for row ${rowIndex}`);
-                const minDelaySec = configJson.general.minDelayBetweenRunNewAccMin * 60;
-                const maxDelaySec = configJson.general.maxDelayBetweenRunNewAccMin * 60;
-                await randomDelay(minDelaySec, maxDelaySec);
-
             } catch (err) {
                 logger.error(`[${pkShort}] manageActivities error on row ${rowIndex}: ${err.message}`);
                 if (browser) {
@@ -293,6 +289,9 @@ async function manageActivities(worksheet, rowNumbers) {
                     logger.debug(`[${pkShort}] Browser closed after error on row ${rowIndex}`);
                 }
             }
+            const minDelaySec = configJson.general.minDelayBetweenRunNewAccMin * 60;
+            const maxDelaySec = configJson.general.maxDelayBetweenRunNewAccMin * 60;
+            await randomDelay(minDelaySec, maxDelaySec);
         }
     } catch (err) {
         logger.error(`manageActivities() error: ${err.message}`);
