@@ -1,0 +1,58 @@
+{
+    "modules": {
+      "bridge": true,
+      "absStream": true,
+      "absStreamTip": true,
+      "absTrade": true,
+      "absUpvote": true,
+      "absClaimBadge": true,
+      "moonshot": true
+    },
+
+    "general": {
+      "minDelayBetweenRunNewAccMin": 5,
+      "maxDelayBetweenRunNewAccMin": 10
+    },
+
+    "bridge": {
+      "minDelayBetweenWalletsMin": 4,
+      "maxDelayBetweenWalletsMin": 8,
+      "maxRandomAmountDecreasingPercents": 0.13
+    },
+
+    "tradingConfigs": {
+      "absTrade": {
+        "minETH": 0.0001,
+        "maxETH": 0.0002,
+        "nTransactionsMin": 4,
+        "nTransactionsMax": 6,
+        "minDelayBetweenBuyAndSellSec": 10,
+        "maxDelayBetweenBuyAndSellSec": 30
+      },
+
+      "moonshot": {
+        "minETH": 0.001,
+        "maxETH": 0.0012,
+        "nTransactionsMin": 4,
+        "nTransactionsMax": 6,
+        "minDelayBetweenBuyAndSellSec": 8,
+        "maxDelayBetweenBuyAndSellSec": 12
+      }
+    },
+
+    "absStream": {
+        "minWatchTimeMin": 1,
+        "maxWatchTimeMin": 1.5,
+        "ethTipSizeMin": 0.0000001,
+        "ethTipSizeMax": 0.0000002
+    },
+
+    "delayLevelsSec": [
+      { "min": 0.5, "max": 1 },
+      { "min": 1, "max": 3 },
+      { "min": 3, "max": 5 },
+      { "min": 5, "max": 10 },
+      { "min": 10, "max": 16 }
+    ]
+}
+  
