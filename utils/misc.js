@@ -5,7 +5,6 @@ function createWeb3Instance(rpc, proxyUrl) {
   if (proxyUrl) {
     const agent = new HttpsProxyAgent(proxyUrl);
     const providerOptions = {
-      keepAlive: true,
       httpsAgent: agent
     };
     return new Web3(new Web3.providers.HttpProvider(rpc, providerOptions));
