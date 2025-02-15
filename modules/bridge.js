@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { CHAINS, stateJson } from '../utils/constants.js';
 import { logger } from '../utils/logger.js';
-import { HttpProxyAgent } from 'http-proxy-agent';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { createWeb3Instance, prepareProxyURL } from '../utils/misc.js';
 import { waitDelay } from '../utils/delay.js';
 
@@ -43,9 +43,9 @@ async function bridgeToAbstract(privateKey, amount, chainFrom, proxyStr) {
             'Content-Type': 'application/json',
         };
 
-        const agent = new HttpProxyAgent(proxyURL);
+        const agent = new HttpsProxyAgent(proxyURL);
 
-        const response = await axios.post('https://api.relay.link/quote', payload, { headers, httpAgent: agent });
+        const response = await axios.post('https://api.relay.link/quote', payload, { headers, httpsAgent: agent });
         const txData = response.data.steps[0].items[0].data;
 
         const gasEstimate = await web3.eth.estimateGas({

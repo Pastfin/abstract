@@ -3,7 +3,7 @@ import ExcelJS from 'exceljs';
 import axios from 'axios';
 import { logger } from './logger.js';
 import { __projectPath, CHAINS, configJson } from './constants.js';
-import { HttpProxyAgent } from 'http-proxy-agent';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { prepareProxyURL } from './misc.js';
 
 
@@ -78,7 +78,7 @@ async function validateExcelFile() {
             hasError = true;
         }
 
-        if (proxy) {
+        if (proxy && isActive) {
             try {
                 await validateProxy(proxy);
                 logger.debug(`${rowLabel}: Proxy is valid -> ${proxy}`);
@@ -103,16 +103,16 @@ async function validateExcelFile() {
 async function validateProxy(proxyStr) {
     const proxyURL = prepareProxyURL(proxyStr);
 
-    const agent = new HttpProxyAgent(proxyURL);
+    const agent = new HttpsProxyAgent(proxyURL);
 
-    const response = await axios.get('https://example.com/', {httpAgent: agent, timeout: 3000});
-
+    const response = await axios.get('https://example.com/', {httpsAgent: agent, timeout: 3000});
     if (response.status !== 200) {
         throw new Error(`Invalid status code ${response.status} with proxy ${proxyURL}`);
     }
 
     return;
 }
+
 
 
 function validateConfig() {
