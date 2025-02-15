@@ -43,15 +43,15 @@ const erc20ABI = [
 const CHAINS = {
     "OP": {
         "id": 10,
-        "rpc": "https://optimism.drpc.org"
+        "rpc": "https://optimism-rpc.publicnode.com"
     },
     "ARB": {
         "id": 42161,
-        "rpc": "https://arbitrum.drpc.org"
+        "rpc": "https://arbitrum-one-rpc.publicnode.com"
     },
     "BASE": {
         "id": 8453,
-        "rpc": "https://base.drpc.org"
+        "rpc": "https://base-rpc.publicnode.com"
     }
 }
 
