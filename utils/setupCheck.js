@@ -105,7 +105,7 @@ async function validateProxy(proxyStr) {
 
     const agent = new HttpProxyAgent(proxyURL);
 
-    const response = await axios.get('https://example.com/', {httpAgent: agent, timeout: 15000});
+    const response = await axios.get('https://example.com/', {httpAgent: agent, timeout: 3000});
 
     if (response.status !== 200) {
         throw new Error(`Invalid status code ${response.status} with proxy ${proxyURL}`);
