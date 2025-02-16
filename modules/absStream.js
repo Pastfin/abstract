@@ -14,7 +14,7 @@ async function watchStream(page, privateKey) {
     logger.info(`[${pkShort}] watchStream started. Duration: ${durationMin.toFixed(1)} min, Tip: ${ethTipAmount}`);
 
     await page.goto('https://www.abs.xyz/profile');
-    await waitDelay(2);
+    await waitDelay(3);
     await waitForAndSmartClick(page, '#sidebar-Stream a.styles_linkButton__GAIYi');
     await waitDelay(1);
     await page.waitForSelector('ul.styles_spotlightGrid__cQEVn', { visible: true });

@@ -231,7 +231,7 @@ async function tradeMoonshot(page, browser, privateKey, proxyStr, fakeUserAgent)
         logger.debug(`[${pkShort}] Clicking "Buy/Sell" button...`);
         await waitForAndSmartClick(page, buyOrSellButton, 'Click buy/sell');
         logger.debug(`[${pkShort}] "Buy/Sell" clicked. Waiting 3s...`);
-        await waitDelay(3);
+        await waitDelay(4);
 
         logger.debug(`[${pkShort}] Checking for Privy window...`);
         const allPages = await browser.pages();
@@ -263,12 +263,30 @@ async function tradeMoonshot(page, browser, privateKey, proxyStr, fakeUserAgent)
         logger.debug(`[${pkShort}] "Approve" clicked. Waiting...`);
         await waitDelay(4);
 
-        logger.debug(`[${pkShort}] Clicking "All Done" button on Privy window...`);
-        await waitForAndSmartClick(
-            privyWindow,
-            'xpath///button[contains(., "All Done")]',
-            'Connect Confirm button'
-        );
+        try {
+            logger.debug(`[${pkShort}] Clicking "All Done" button on Privy window...`);
+            await waitForAndSmartClick(
+                privyWindow,
+                'xpath///button[contains(., "All Done")]',
+                'Connect Confirm button'
+            );
+        } catch {
+            logger.debug(`[${pkShort}] Catching error with first approve not clicked`);
+            logger.debug(`[${pkShort}] Clicking "Approve" button on Privy window...`);
+            await waitForAndSmartClick(
+                privyWindow,
+                'xpath///button[contains(., "Approve")]',
+                'Connect Confirm button'
+            );
+            await waitDelay(2);
+            logger.debug(`[${pkShort}] Clicking "All Done" button on Privy window...`);
+            await waitForAndSmartClick(
+                privyWindow,
+                'xpath///button[contains(., "All Done")]',
+                'Connect Confirm button'
+            );
+        }
+
         logger.debug(`[${pkShort}] "All Done" clicked. Waiting...`);
 
         currentType = currentType === 'Buy' ? 'Sell' : 'Buy';

@@ -10,7 +10,7 @@ async function startTrade(page, contractIn, contractOut, amountIn, privateKey) {
     const pkShort = privateKey.slice(0, 15);
     logger.info(`amount in: ${amountIn}`);
     await page.goto('https://www.abs.xyz/profile');
-    await waitDelay(2);
+    await waitDelay(3);
     await waitForAndSmartClick(page, '#sidebar-Trade a.styles_linkButton__GAIYi', 'Click Trade button');
     await waitDelay(2);
     
