@@ -40,21 +40,23 @@ async function initWalletInMoonshot(page, browser, privateKey) {
     for (let attempt = 1; attempt <= 3; attempt++) {
         logger.debug(`[${pkShort}] Attempt #${attempt} to Click Connect`);
         try {
+            logger.debug(`[${pkShort}] Attempt #${attempt} to Click Connect`);
             await waitForAndSmartClick(page, '.chakra-button.custom-10h434f', 'Click Connect');
+            await waitDelay(1);
+            await waitForAndSmartClick(page, 'button img[alt="Abstract Global Wallet"]', 'Click Abstract Global Wallet');
+            await waitDelay(3);
+            logger.info('[${pkShort}] Moonshot AGW connecting started');
             break;
         } catch (err) {
             logger.warn(`[${pkShort}] Attempt #${attempt} to Click Connect failed: ${err.message}`);
             if (attempt === 3) {
-                logger.error(`[${pkShort}] All 3 attempts to Click Connect failed`);
+                logger.error(`[${pkShort}] All 3 attempts to Click Connect failed `);
                 return;
             }
             await page.reload();
             await waitDelay(4);
         }
     }
-
-    await waitForAndSmartClick(page, 'button img[alt="Abstract Global Wallet"]', 'Click Abstract Global Wallet');
-    await waitDelay(3);
 
     const allPages = await browser.pages();
     logger.debug(`[${pkShort}] All opened pages:`);
