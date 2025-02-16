@@ -45,7 +45,7 @@ async function initWalletInMoonshot(page, browser, privateKey) {
             await waitDelay(1);
             await waitForAndSmartClick(page, 'button img[alt="Abstract Global Wallet"]', 'Click Abstract Global Wallet');
             await waitDelay(3);
-            logger.info('[${pkShort}] Moonshot AGW connecting started');
+            logger.info(`[${pkShort}] Moonshot AGW connecting started`);
             break;
         } catch (err) {
             logger.warn(`[${pkShort}] Attempt #${attempt} to Click Connect failed: ${err.message}`);
@@ -57,6 +57,7 @@ async function initWalletInMoonshot(page, browser, privateKey) {
             await waitDelay(4);
         }
     }
+
 
     const allPages = await browser.pages();
     logger.debug(`[${pkShort}] All opened pages:`);
@@ -91,15 +92,17 @@ async function initWalletInMoonshot(page, browser, privateKey) {
     }
 
     await waitDelay(3);
-    const currentPages = await browser.pages();
+    
     let metaMaskPageConnect;
+    let currentPages;
+    
+    currentPages = await browser.pages();
+
     for (const currentPage of currentPages) {
         const url = await currentPage.url();
         logger.debug(`[${pkShort}] Page URL: ${url}`);
         if (url.includes('chrome-extension')) {
             metaMaskPageConnect = currentPage;
-        } else if (url.includes('coinbase')) {
-            await currentPage.close();
         }
     }
 
@@ -108,6 +111,17 @@ async function initWalletInMoonshot(page, browser, privateKey) {
     await waitDelay(3);
     await waitForAndSmartClick(metaMaskPageConnect, '[data-testid="page-container-footer-next"]', 'Continue Confirm button');
     await waitDelay(3);
+
+    currentPages = await browser.pages();
+    
+    for (const currentPage of currentPages) {
+        const url = await currentPage.url();
+        logger.debug(`[${pkShort}] Page URL: ${url}`);
+        if (url.includes('chrome-extension')) {
+            metaMaskPageConnect = currentPage;
+        }
+    }
+
     try {
         await waitForAndSmartClick(metaMaskPageConnect, '[data-testid="confirm-footer-button"]', 'Connect Confirm button');
     } catch {
